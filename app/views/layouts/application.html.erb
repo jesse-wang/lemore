@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html>
+  <head>
+    <!-- Open Graph protocol -->
+    <meta prefix="og: http://ogp.me/ns#" property="og:site_name" content="LeMore"/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:title" content="<%= yield(:title) %>" />
+    <meta prefix="og: http://ogp.me/ns#" property="og:description" content="<%= yield(:description) %>" />
+    <meta prefix="og: http://ogp.me/ns#" property="og:image" content="<%= yield(:image) %>"/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:url" content="<%= yield(:url) %>"/>
+    <meta name="description" property="description" content="<%=yield(:description)%>" />
+
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>LeMore</title>
+
+    <%= javascript_include_tag "jquery-1.11.3.min", 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag "app", 'data-turbolinks-track' => true %>
+    <%#= javascript_include_tag "facebook", 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+  </head>
+
+  <%= console if Rails.env == "development" %>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var config = {
+        baseUrl: '<%=request.base_url%>/'
+      };
+      lemore.app(config);
+    });
+  </script>
+</html>
