@@ -50,29 +50,28 @@ var Home = React.createClass({
     return (
       <div>
         <section style={{backgroundImage:bgImage, overflow:"auto", height:"350px", position:"relative"}}>
-          <div style={{borderRadius:"0", border:"none", background:"rgba(0,0,0,0.7)", height:"40px"}}>
+          <div style={{borderRadius:"0", border:"none", background:"rgba(0,0,0,0.7)", padding:"5px 0"}}>
             <div className="container">
-            <DropdownButton title='策略' noCaret>
-              <MenuItem eventKey='1'>品牌上市策略</MenuItem>
-              <MenuItem eventKey='2'>产品上市定位策略</MenuItem>
-              <MenuItem eventKey='3'>产品上市销售策略拟定</MenuItem>
-              <MenuItem eventKey='4'>产品上市营销策略拟定</MenuItem>
-              <MenuItem eventKey='5'>产品上市众筹策略拟定</MenuItem>
-              <MenuItem eventKey='6'>客户服务策略</MenuItem>
-              <MenuItem eventKey='7'>粉丝运营策略</MenuItem>
-              <MenuItem eventKey='8'>产品上市总结分析／反思判断</MenuItem>
-            </DropdownButton>
-              <a href='#' style={{display:"inline-block", padding:"10px 20px"}}><span style={{color:"white"}}>策略</span></a>
+              <DropdownButton title='策略' noCaret>
+                <MenuItem eventKey='1'>品牌上市策略</MenuItem>
+                <MenuItem eventKey='2'>产品上市定位策略</MenuItem>
+                <MenuItem eventKey='3'>产品上市销售策略拟定</MenuItem>
+                <MenuItem eventKey='4'>产品上市营销策略拟定</MenuItem>
+                <MenuItem eventKey='5'>产品上市众筹策略拟定</MenuItem>
+                <MenuItem eventKey='6'>客户服务策略</MenuItem>
+                <MenuItem eventKey='7'>粉丝运营策略</MenuItem>
+                <MenuItem eventKey='8'>产品上市总结分析／反思判断</MenuItem>
+              </DropdownButton>
               <span style={{color:"white"}}>|</span>
-              <a href='#' style={{display:"inline-block", padding:"10px 20px"}}><span style={{color:"white"}}>实现</span></a>
+              <DropdownButton title='实现' noCaret></DropdownButton>
               <span style={{color:"white"}}>|</span>
-              <a href='#' style={{display:"inline-block", padding:"10px 20px"}}><span style={{color:"white"}}>发布</span></a>
+              <DropdownButton title='发布' noCaret></DropdownButton>
             </div>
           </div>
 
           <div className="mid-section">
             <h2 style={{color:"white"}}>用世界最棒的智慧来帮你做全球营销</h2>
-            <div style={{maxWidth:"600px", margin:"30px 0"}}>
+            <div style={{maxWidth:"600px", margin:"30px auto"}}>
               <Formsy.Form className="user-form" onValidSubmit={this.submit}>
                 <div className="controls" style={{margin:"0 15px"}}>
                   <FormInputGroup name="search" type="text" buttonAfter={subscribeBtn} style={{color:"white", borderRadius:"0", background:"transparent", height:"46px"}} placeholder="寻找什么样的市场服务" />
