@@ -1,15 +1,61 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
- * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any styles
- * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
- * file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+body {
+  background: whitesmoke;
+}
+
+.mid-section {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -o-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.btn-default {
+  background: transparent;
+  color: white;
+  border: none;
+}
+
+ul.dropdown-menu {
+  background: rgba(0,0,0,0.7);
+}
+
+ul.dropdown-menu li a {
+  color: white;
+}
+
+.service-container {
+  width: 1050+30px;
+  background: white;
+  overflow: auto;
+  margin: 0 auto;
+  min-height: 1000px;
+  padding: 0 15px;
+}
+
+.service-container .service-item {
+  width: 350px;
+  padding: 15px;
+  text-align: left;
+}
+
+@media (max-width: 1399px) and (min-width: 1050px) {
+  .service-container {
+    width: 1050+30px;
+  }  
+}
+
+@media (max-width: 1049px) and (min-width: 700px) {
+  .service-container {
+    width: 700+30px;
+  }
+}
+
+@media (max-width: 699px) {
+  .service-container .service-item {
+    width: 100vw;
+  }
+}
