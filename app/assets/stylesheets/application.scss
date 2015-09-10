@@ -1,10 +1,25 @@
+$brand: #76cdd4;
+
 body {
   background: whitesmoke;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
 }
 
 .center {
   margin-left: auto;
   margin-right: auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.meta {
+  color: #9da6ab;
 }
 
 .mid-section {
@@ -24,12 +39,12 @@ body {
   border: none;
 }
 
-ul.dropdown-menu {
+.home-top ul.dropdown-menu {
   background: rgba(0,0,0,0.7);
-}
 
-ul.dropdown-menu li a {
-  color: white;
+  li a {
+    color: white;
+  }
 }
 
 .service-container {
@@ -67,4 +82,18 @@ ul.dropdown-menu li a {
   .service-container .service-item {
     width: calc(100vw - 30px);
   }
+}
+
+// Users
+.user-body {
+  max-width: 1050+30px;
+  background: white;
+  // overflow: auto;
+  margin: 0 auto;
+  // min-height: 1000px;
+  padding: 0 15px;
+}
+
+.gravatar {
+  border-radius: 50%;
 }

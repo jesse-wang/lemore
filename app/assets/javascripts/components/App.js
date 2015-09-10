@@ -3,6 +3,7 @@ var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
 var Uri = require('jsuri');
 var Cookie = require('react-cookie');
+var Icon = require ('react-fa');
 // Components
 var TopBar = require('./Shared/TopBar');
 var Footer = require('./Shared/Footer');
@@ -23,7 +24,7 @@ var App = React.createClass({
       <div style={{background:"whitesmoke"}}>
         <TopBar />
         <RouteHandler appConfig={this.props.appConfig} />
-        <Footer />
+        {/*<Footer />*/}
       </div>
     );
   }

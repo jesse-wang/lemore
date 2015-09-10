@@ -1,4 +1,5 @@
 var React = require('react');
+var Link = require('react-router').Link;
 var Navbar = require('react-bootstrap').Navbar;
 var Nav = require('react-bootstrap').Nav;
 var NavItem = require('react-bootstrap').NavItem;
@@ -7,9 +8,9 @@ var NavItem = require('react-bootstrap').NavItem;
 
 var TopBar = React.createClass({
   render: function() {
-    const brand = <div href='#'>
+    const brand = <Link to='home'>
                     <span style={{color:"#76cdd4", fontSize:"24px", fontWeight:"bold"}}>高高</span><span style={{color:"black", fontSize:"24px", fontWeight:"bold"}}>手</span>
-                  </div>;
+                  </Link>;
     return (
       <div style={{height:"50px"}}>
         <Navbar brand={brand} toggleNavKey={0} fixedTop style={{border:"none", background:"white", marginBottom:"0"}}>

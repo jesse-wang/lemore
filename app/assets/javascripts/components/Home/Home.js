@@ -49,7 +49,7 @@ var Home = React.createClass({
 
     return (
       <div>
-        <section style={{backgroundImage:bgImage, overflow:"auto", height:"350px", position:"relative"}}>
+        <section className="home-top" style={{backgroundImage:bgImage, overflow:"auto", height:"350px", position:"relative"}}>
           <div style={{borderRadius:"0", border:"none", background:"rgba(0,0,0,0.7)", padding:"5px 0"}}>
             <div className="container">
               <DropdownButton title='策略' noCaret>
