@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    user = User.find_by(params[:username])
+    user = User.find_by(username: params[:id])
 
     @title = user.username
     @image = "/logo.png"
@@ -23,17 +23,19 @@ class UsersController < ApplicationController
   end
   
   def update
-    @user = User.find_by(username: params[:username])
+    user = User.find_by(username: params[:username])
 
     case params[:field]
-    when 'portfolio'
-      @user.update!(portfolio: params[:content])
+      when 'portfolio'
+        user.update!(portfolio: params[:content])
+      when 'profile'
+        user.update!(profile: params[:content])
     end
     
-    if @user.save!
-      render json: @user.as_json, status: :ok
+    if user.save!
+      render json: user.as_json, status: :ok
     else 
-      render json: @user.errors.as_json(full_messages: true), status: 422
+      render json: user.errors.as_json(full_messages: true), status: 422
     end
   end
 

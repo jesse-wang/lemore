@@ -12,6 +12,11 @@ var AppActions = require('../../actions/AppActions');
 var Avatar = require('../Shared/Avatar').Avatar;
 var Comments = require('../Shared/Comments');
 
+function replaceURLWithLinks(text){
+    const delimiter = /((?:https?:\/\/)?(?:(?:[a-z0-9]?(?:[a-z0-9\-]{1,61}[a-z0-9])?\.[^\.|\s])+[a-z\.]*[a-z]+|(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(?::\d{1,5})*[a-z0-9.,_\/~#&=;%+?\-\\(\\)]*)/ig;
+    return text.replace(delimiter, '<a href="http://$1">$1</a>'); 
+}
+
 var Expert = React.createClass({
 
   getInitialState: function() {
@@ -174,7 +179,9 @@ var Portfolio = React.createClass({
     if (this.props.editView) {
       var content = <textarea ref='portfolio' rows='10' style={{width:"100%"}} value={this.state.portfolio} onChange={this.handleChange}/>
     } else {
-      content = this.state.portfolio;
+      if (this.props.portfolio) {
+        content = <p style={{"white-space": "pre-wrap"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.portfolio)}}></p>;
+      }
     }
 
     return(
@@ -214,7 +221,9 @@ var Profile = React.createClass({
     if (this.props.editView) {
       var content = <textarea rows='10' style={{width:"100%"}} value={this.state.profile} onChange={this.handleChange}/>
     } else {
-      content = this.props.profile;
+      if (this.props.profile) {
+        content = <p style={{"white-space": "pre-wrap"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.profile)}}></p>;
+      }
     }
 
     return(

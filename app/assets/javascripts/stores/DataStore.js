@@ -1158,7 +1158,6 @@ var DataStore = _.extend({
       data: data
     }).then(
       function(response){
-        console.log(response)
         // SessionActions.receiveCurrentUserInfo(response);
         AppActions.receiveUserInfo(response);
       },
