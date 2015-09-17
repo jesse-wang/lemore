@@ -15,7 +15,7 @@ module.exports = {
     var routes = (
       <Route name='app' path='/' handler={App}>
         <DefaultRoute name="home" handler={Home} />
-        <Route name='expert' path='expert/:username' handler={Expert} />
+        <Route name='expert' path='u/:username' handler={Expert} />
       </Route>
     );
 
