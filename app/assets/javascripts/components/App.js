@@ -87,7 +87,7 @@ var App = React.createClass({
     return (
       <div style={{background:"whitesmoke"}}>
         <TopBar dataStore={this.state.dataStore} session={this.state.session} openSignIn={this.openSignIn} openSignUp={this.openSignUp} />
-        <RouteHandler appConfig={this.props.appConfig} dataStore={this.state.dataStore}/>
+        <RouteHandler session={this.state.session} appConfig={this.props.appConfig} dataStore={this.state.dataStore} />
         <SignInForm session={this.state.session} ref='SignInForm' openSignUp={this.openSignUp} />
         <SignUpForm session={this.state.session} ref='SignUpForm' openSignIn={this.openSignIn} />
         {/*<Footer />*/}

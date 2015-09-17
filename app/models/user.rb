@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  validates_exclusion_of :username, in: %w( admin superuser me invitation), message: "not available."
+  validates :username, uniqueness: { allow_blank: false, case_sensitive: false }, format: { with: /\A\w*\z/, message: "must contain letters (a-z) and numbers (0-9) only." }
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -22,28 +25,10 @@ class User < ActiveRecord::Base
         id:              self.id,
         username:        self.username,
         email:           self.email,
-        # avatar:          self.profile.avatar.url || self.image || "/icons/hobbyist_ninja_male.png",
+        avatar:          self.avatar,
         first_name:      self.first_name,
         last_name:       self.last_name,
         headline:        self.headline,
-        # sex:             self.profile.sex,
-        # birthday:        self.profile.birthday,
-        # bio:             self.profile.bio,
-        # twitterId:       self.profile.twitter_id,
-        # facebookId:      self.profile.facebook_id,
-        # reputation:      self.reputation_for(:comment_votes).to_i,
-        # coin:            self.credit.to_i,
-        # badges:          self.profile.badges,
-        # is_admin:        self.is_admin,
-        # projects_count:  self.projects.count,
-        # upvotes_count:   Project.evaluated_by(:user_project_votes, self).count,
-        # comments_count:  self.comments.count,
-        # wants_count:     self.project_likes.count,
-        # cools_count:     self.project_feedbacks.where(content: 'cool').count,
-        # owns_count:      self.project_owns.count,
-        # following_count: self.following.count,
-        # followers_count: self.followers.count,
-        # following:       current_user ? current_user.following?(self) : false
       }
     }
   end

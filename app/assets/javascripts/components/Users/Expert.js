@@ -31,6 +31,16 @@ var Expert = React.createClass({
     this.getData(this.props.params.username);
   },
 
+  componentWillReceiveProps: function(nextProps){
+    var oldUsername = this.props.params.username;
+    var newUserame = nextProps.params.username;
+
+    // Load new data if user went from project to project
+    if(oldUsername != newUserame){
+     this.getData(newUserame);
+    }
+  },
+
   getData: function(username) {
     AppActions.requestUserInfo({username: username});  
   },
@@ -45,11 +55,14 @@ var Expert = React.createClass({
     var bgImage = 'linear-gradient(to bottom,rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url()';
 
     var user = this.props.dataStore.get('usersInfo').get(this.props.params.username);
-    console.log(this.props.dataStore.get('usersInfo').toJS())
     if (!user) { user=Initializers.user; }
-    // user.avatar = "https://s3.amazonaws.com/uifaces/faces/twitter/toffeenutdesign/128.jpg";
 
     var comments = [Initializers.comment];
+
+    var editBtn;
+    if (this.props.session.isLoggedIn && this.props.session.userInfo.username == this.props.params.username) {
+      editBtn = <button className="btn btn-primary" onClick={this.toggleEditView}>{this.state.editView ? 'Done Edit' : 'Edit'}</button> 
+    }
 
     return (
       <div>
@@ -66,7 +79,7 @@ var Expert = React.createClass({
               <div style={{display:"inline-block", marginLeft:"20px"}}>
                 <h1>{user.username}</h1>
                 <p>{user.headline}</p>
-                <button className="btn btn-primary" onClick={this.toggleEditView}>{this.state.editView ? 'Done Edit' : 'Edit'}</button>
+                {editBtn}
               </div>
             </div>
 
@@ -166,9 +179,10 @@ var Portfolio = React.createClass({
 
   componentWillReceiveProps: function(nextProps){
     this.setState({ portfolio: nextProps.portfolio });
-
+    console.log(this.props)
+    console.log(nextProps)
     if (this.props.editView && !nextProps.editView) {
-      var data = {field: 'portfolio', username: this.props.username, content: this.state.portfolio};
+      var data = {field: 'portfolio', username: nextProps.username, content: this.state.portfolio};
       AppActions.updateProfile(data);
     }
   },
@@ -210,7 +224,7 @@ var Profile = React.createClass({
     this.setState({ profile: nextProps.profile });
 
     if (this.props.editView && !nextProps.editView) {
-      var data = {field: 'profile', username: this.props.username, content: this.state.profile};
+      var data = {field: 'profile', username: nextProps.username, content: this.state.profile};
       AppActions.updateProfile(data);
     }
   },
