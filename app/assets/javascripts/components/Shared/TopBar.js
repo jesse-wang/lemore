@@ -27,6 +27,8 @@ var TopBar = React.createClass({
     var user = this.props.session.userInfo;
     if (!user) { user = {}; }
 
+    console.log(user)
+
     var signInBtn, signUpBtn, signOutBtn, becomeExpertBtn, avatarBtn;
 
     if (!this.props.session.isLoggedIn){ 

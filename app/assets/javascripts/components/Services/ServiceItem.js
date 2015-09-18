@@ -12,8 +12,8 @@ var ServiceItem = React.createClass({
 
     return (
       <ReactCSSTransitionGroup transitionName="example" transitionAppear={true}>
-        <div  className="service-item">
-          <Link to="expert" params={{username: "test"}}>
+        <div className="service-item">
+          <Link to="expert" params={{username: item.username}}>
             <div style={{border:"1px solid lightgray", padding:"20px"}}> 
               <h5><b>{item.headline}</b></h5>
               <p><b>高手： {item.nickname}</b></p>
