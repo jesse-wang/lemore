@@ -14,9 +14,27 @@ var AppActions = require('../../actions/AppActions');
 var Avatar = require('../Shared/Avatar').Avatar;
 var Comments = require('../Shared/Comments');
 
-function replaceURLWithLinks(text){
-    const delimiter = /((?:https?:\/\/)?(?:(?:[a-z0-9]?(?:[a-z0-9\-]{1,61}[a-z0-9])?\.[^\.|\s])+[a-z\.]*[a-z]+|(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(?::\d{1,5})*[a-z0-9.,_\/~#&=;%+?\-\\(\\)]*)/ig;
-    return text.replace(delimiter, '<a href="http://$1">$1</a>'); 
+// function replaceURLWithLinks(text){
+//     const delimiter = /((?:https?:\/\/)?(?:(?:[a-z0-9]?(?:[a-z0-9\-]{1,61}[a-z0-9])?\.[^\.|\s])+[a-z\.]*[a-z]+|(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(?::\d{1,5})*[a-z0-9.,_\/~#&=;%+?\-\\(\\)]*)/ig;
+//     return text.replace(delimiter, '<a href="http://$1">$1</a>'); 
+// }
+
+function replaceURLWithLinks(inputText) {
+    var replacedText, replacePattern1, replacePattern2, replacePattern3;
+
+    //URLs starting with http://, https://, or ftp://
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+    //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+    //Change email addresses to mailto:: links.
+    replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+    replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+
+    return replacedText;
 }
 
 var Wrapper = React.createClass({
@@ -241,7 +259,7 @@ var Portfolio = React.createClass({
     if (this.props.editView) {
       content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.portfolio} onChange={this.props.handleChange.bind(this, 'portfolio')}/>
     } else {
-      content = <p style={{"white-space": "pre-wrap"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.portfolio)}}></p>;
+      content = <p style={{"white-space": "pre-wrap", textOverflow:"ellipsis", overflow:"hidden"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.portfolio)}}></p>;
     }
 
     return(
@@ -264,7 +282,7 @@ var Profile = React.createClass({
     if (this.props.editView) {
       content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.profile} onChange={this.props.handleChange.bind(this, 'profile')}/>
     } else {
-      content = <p style={{"white-space": "pre-wrap"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.profile)}}></p>;
+      content = <p style={{"white-space": "pre-wrap", textOverflow:"ellipsis", overflow:"hidden"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.profile)}}></p>;
     }
 
     return(
