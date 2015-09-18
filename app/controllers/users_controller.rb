@@ -25,18 +25,24 @@ class UsersController < ApplicationController
   def update
     user = User.find_by(username: params[:username])
 
-    case params[:field]
-      when 'portfolio'
-        user.update!(portfolio: params[:content])
-      when 'profile'
-        user.update!(profile: params[:content])
-    end
+    # case params[:field]
+    #   when 'portfolio'
+    #     user.update!(portfolio: params[:content])
+    #   when 'profile'
+    #     user.update!(profile: params[:content])
+    # end
     
-    if user.save!
+    if user.update!(user_params)
       render json: user.as_json, status: :ok
     else 
       render json: user.errors.as_json(full_messages: true), status: 422
     end
   end
+
+  private
+
+    def user_params
+      params.permit(:nickname, :headline, :portfolio, :profile)
+    end
 
 end

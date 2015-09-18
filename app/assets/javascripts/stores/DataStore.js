@@ -657,7 +657,7 @@ var DataStore = _.extend({
     usersInfo = results.table;
     _DataStore = _DataStore.set('usersInfo', usersInfo);
 
-    console.log(_DataStore.get('usersInfo', usersInfo));
+    console.log(_DataStore.get('usersInfo').toJS());
 
     DataStore.emitChange();
   },

@@ -17,7 +17,6 @@ var SignUpForm = React.createClass({
   },
 
   componentWillReceiveProps: function(nextProp){
-    console.log(nextProp)
     if(nextProp.session.isLoggedIn){
       this.closeModal();
     }

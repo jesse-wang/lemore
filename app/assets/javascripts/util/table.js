@@ -24,8 +24,6 @@ var updateHash = function(table, data){
 };
 
 var updateUser = function(table, data){
-  console.log(data)
-
   var result = {
     ids: [],
     table: table
