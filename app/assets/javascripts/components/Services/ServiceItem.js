@@ -15,8 +15,9 @@ var ServiceItem = React.createClass({
         <div  className="service-item">
           <Link to="expert" params={{username: "test"}}>
             <div style={{border:"1px solid lightgray", padding:"20px"}}> 
-              <h5 style={{height:"30px"}}><b>{item.title}</b></h5>
-              <img src={item.image} alt={item.title} width="100%" />
+              <h5><b>{item.headline}</b></h5>
+              <p><b>高手： {item.nickname}</b></p>
+              <img src={item.avatar} alt={item.nickname} width="100%" />
             </div>
           </Link>
         </div>

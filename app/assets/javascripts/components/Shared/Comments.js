@@ -142,7 +142,7 @@ var Comments = React.createClass ({
             </div>
             <button onClick={this.postComment} className="btn btn-primary" name="button" type="submit">Post</button> 
           </div>
-          <ul>
+          {/*<ul>
             <div id="comment-list">
               <InfiniteScroll
                 loader = {<Loader/>}
@@ -151,7 +151,7 @@ var Comments = React.createClass ({
                 {comments}
               </InfiniteScroll>
             </div>
-          </ul>
+          </ul>*/}
         </div>
       </div>
     );

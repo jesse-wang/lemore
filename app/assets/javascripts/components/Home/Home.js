@@ -4,6 +4,8 @@ var InfiniteScroll = require('react-infinite-scroll')(React);
 var MasonryMixin = require('react-masonry-mixin');
 var DropdownButton = require('react-bootstrap').DropdownButton;
 var MenuItem = require('react-bootstrap').MenuItem;
+// Actions
+var AppActions = require('../../actions/AppActions');
 // Components 
 var Loader = require('../Shared/Loader');
 var ServiceItem = require('../Services/ServiceItem');
@@ -15,6 +17,10 @@ var masonryOptions = {
 
 var Home = React.createClass({
   mixins: [MasonryMixin('masonryContainer', masonryOptions)],
+
+  componentWillMount: function() {
+    AppActions.requestAllUsers();
+  },
 
   submit: function() {
 
@@ -43,7 +49,7 @@ var Home = React.createClass({
       image: "https://s3.amazonaws.com/uifaces/faces/twitter/3en/128.jpg"
     };
 
-    var items = [item1, item2, item3].map(function(i) {
+    var items = this.props.dataStore.get('usersInfo').map(function(i) {
       return <ServiceItem item={i} />
     });
 

@@ -5,6 +5,8 @@ var DropdownButton = require('react-bootstrap').DropdownButton;
 var MenuItem = require('react-bootstrap').MenuItem;
 var Input = require('react-bootstrap').Input;
 var Initializers = require('../../constants/Initializers');
+var ReactS3Uploader = require('../react-s3-uploader');
+var Uri = require('jsuri');
 // Actions
 var AppActions = require('../../actions/AppActions');
 // Components
@@ -17,18 +19,7 @@ function replaceURLWithLinks(text){
     return text.replace(delimiter, '<a href="http://$1">$1</a>'); 
 }
 
-var Expert = React.createClass({
-
-  getInitialState: function() {
-    var user = this.props.dataStore.get("usersInfo").get(this.props.params.username);
-    console.log(this.props.dataStore.get("usersInfo").toJS())
-    if (!user) { user = Initializers.user; }
-
-    return {
-      editView:    false,
-      user:        user
-    };
-  },
+var Wrapper = React.createClass({
 
   componentWillMount: function() {
     this.getData(this.props.params.username);
@@ -38,41 +29,53 @@ var Expert = React.createClass({
     var oldUsername = this.props.params.username;
     var newUserame = nextProps.params.username;
 
-    console.log(nextProps.params.username)
-
-    var user = this.props.dataStore.get('usersInfo').get(newUserame);
-
-    console.log(this.props.dataStore.get('usersInfo').toJS())
-    console.log(user)
-
-    if (!user) { user = Initializers.user; }
-
-    this.setState({
-      user:    user
-    });
-
     // Load new data if user went from project to project
     if(oldUsername != newUserame){
      this.getData(newUserame);
     }
   },
 
-  handleChange: function(field, e) {
-    var user = this.state.user;
-    user[field] = e.target.value;
-    console.log(user)
-
-    this.setState({ user: user });
-  },
-
   getData: function(username) {
     AppActions.requestUserInfo({username: username});  
   },
 
+  render: function() {
+    var user = this.props.dataStore.get("usersInfo").get(this.props.params.username);
+    if (!user) { user = Initializers.emptyUser; }
+
+    return <Expert user={user} session={this.props.session}/>;
+  }
+});
+
+var Expert = React.createClass({
+  getInitialState: function() {
+    return {
+      editView:    false,
+      user:        this.props.user
+    };
+  },
+
+  componentWillReceiveProps: function(nextProps){
+    this.setState({ user: nextProps.user })
+  },
+
+  handleChange: function(field, e) {
+    var user = this.state.user;
+    user[field] = e.target.value;
+
+    this.setState({ user: user });
+  },
+
+  handleAvatarChange: function(image) {
+    var user = this.state.user;
+    user.avatar = image;
+
+    this.setState({ user: user });
+  },
+
   toggleEditView: function(){
     if (this.state.editView) {
-      console.log(this.state.user)
-      // AppActions.updateProfile(this.state.user);  
+      AppActions.updateProfile(this.state.user); 
     }
 
     this.setState({
@@ -84,12 +87,13 @@ var Expert = React.createClass({
     var bgImage = 'linear-gradient(to bottom,rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url()';
 
     var user = this.state.user;
-    if (!user) { user=Initializers.user; }
 
     var comments = [Initializers.comment];
 
     var editBtn;
-    if (this.props.session.isLoggedIn && this.props.session.userInfo.username == this.props.params.username) {
+
+    console.log(this.props.session)
+    if (this.props.session.isLoggedIn && this.props.session.userInfo.username == user.username) {
       editBtn = <button className="btn btn-primary pull-right" style={{margin:"15px"}} onClick={this.toggleEditView}>{this.state.editView ? 'Done Edit' : 'Edit'}</button> 
     }
 
@@ -101,7 +105,7 @@ var Expert = React.createClass({
         <section ref='body' className="user-body container">
           <div ref='left' className='col-sm-8'>
             {editBtn}
-            <ProfileHeader editView={this.state.editView} user={user} handleChange={this.handleChange}/>
+            <ProfileHeader editView={this.state.editView} user={user} handleChange={this.handleChange} handleAvatarChange={this.handleAvatarChange}/>
             <Services editView={this.state.editView} user={user} handleChange={this.handleChange}/>
             <Portfolio editView={this.state.editView} user={user} handleChange={this.handleChange}/>
             <Profile editView={this.state.editView} user={user} handleChange={this.handleChange}/>
@@ -118,7 +122,7 @@ var Expert = React.createClass({
               </div>
               
               <div style={{margin:"20px 5px"}}>
-                3281个用户给TA打分
+                {/*3281个用户给TA打分
                 <span className="pull-right">
                   <i className="fa fa-star" style={{color:"yellow"}}></i>
                   <i className="fa fa-star" style={{color:"yellow"}}></i>
@@ -126,7 +130,7 @@ var Expert = React.createClass({
                   <i className="fa fa-star" style={{color:"yellow"}}></i>
                   <i className="fa fa-star" style={{color:"yellow"}}></i>
                   <span style={{marginLeft:"5px"}}>5</span>
-                </span>
+                </span>*/}
               </div>
 
               <div>
@@ -152,21 +156,35 @@ var Expert = React.createClass({
 
 var ProfileHeader = React.createClass({
 
+  onUploadFinish: function(signedResult){
+    var uri = new Uri(signedResult.signedUrl);
+    var image = "http://" + uri.host()+uri.path();
+    this.props.handleAvatarChange(image);
+  },
+
   render: function(){
-    var nickname, headline;
+    var avatar, nickname, headline;
+    var user = this.props.user;
     
     if (this.props.editView) {
-      nickname = <input type="text" placeholder="昵称" value={this.props.user.nickname} onChange={this.props.handleChange.bind(this, 'nickname')} style={{display:"inline-block", marginRight:"20px", marginBottom:"10px"}}/>
-      headline = <input type="text" placeholder="一句话描述" value={this.props.user.headline} onChange={this.props.handleChange.bind(this, 'headline')} style={{display:"inline-block"}}/>
+      avatar =  <div>
+                  <img ref="userAvatar" className="gravatar" style={{width: '150px', height: '150px'}} src={user.avatar} />
+                  <div style={{position:"absolute"}}>
+                    <ReactS3Uploader signingUrl="/s3_sign" accept="image/*" onFinish={this.onUploadFinish} />
+                  </div>
+                </div>;
+      nickname = <input type="text" placeholder="昵称" value={user.nickname} onChange={this.props.handleChange.bind(this, 'nickname')} style={{display:"inline-block", marginRight:"20px", marginBottom:"10px"}}/>
+      headline = <input type="text" placeholder="一句话描述" value={user.headline} onChange={this.props.handleChange.bind(this, 'headline')} style={{display:"inline-block"}}/>
     } else {
-      nickname = <h1 style={{display:"inline-block", marginRight:"20px", }}>{this.props.user.nickname}</h1>;
-      headline = <p style={{display:"inline-block"}}>{this.props.user.headline}</p>;  
+      avatar = <Avatar user={user} size="150"/>;
+      nickname = <h1 style={{display:"inline-block", marginRight:"20px", marginTop:"0"}}>{user.nickname=='' ? 'TA' : user.nickname}</h1>;
+      headline = <p style={{display:"inline-block"}}>{user.headline=='' ? '关于TA' : user.headline}</p>;  
     }
 
     return(
       <div>
         <div style={{marginTop:"-30px", display:"inline-block"}}>
-          <Avatar user={this.props.user} size="150"/>
+          {avatar}
         </div>
 
         <div style={{display:"inline-block", marginLeft:"20px", verticalMargin:"top"}}>
@@ -186,7 +204,7 @@ var Services = React.createClass({
     return(
       <div style={{padding:"20px 15px"}}>
         <h3>高手技能</h3>
-        <div style={{background:"whitesmoke", padding:"10px", margin:"10px 0"}}>
+        {/*<div style={{background:"whitesmoke", padding:"10px", margin:"10px 0"}}>
           <span style={{lineHeight:"2.6"}}>产品策略撰写</span>
           <span className='pull-right'>
             <Input type='select'>
@@ -208,7 +226,7 @@ var Services = React.createClass({
         </div>
         <div>
           <button className="btn btn-success pull-right">购买（$150)</button>
-        </div>
+        </div>*/}
       </div>
     );
   }
@@ -217,31 +235,13 @@ var Services = React.createClass({
 
 var Portfolio = React.createClass({
 
-  getInitialState: function() {
-    return { portfolio: null };
-  },
-
-  handleChange: function(e) {
-    this.setState({ portfolio: e.target.value });
-  },
-
-  componentWillReceiveProps: function(nextProps){
-    this.setState({ portfolio: nextProps.portfolio });
-    if (this.props.editView && !nextProps.editView) {
-      var data = {field: 'portfolio', username: nextProps.username, content: this.state.portfolio};
-      // AppActions.updateProfile(data);
-    }
-  },
-
   render: function(){
     var content;
     
     if (this.props.editView) {
-      content = <textarea rows='10' style={{width:"100%"}} value={this.state.portfolio} onChange={this.handleChange}/>
+      content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.portfolio} onChange={this.props.handleChange.bind(this, 'portfolio')}/>
     } else {
-      if (this.props.portfolio) {
-        content = <p style={{"white-space": "pre-wrap"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.portfolio)}}></p>;
-      }
+      content = <p style={{"white-space": "pre-wrap"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.portfolio)}}></p>;
     }
 
     return(
@@ -258,32 +258,13 @@ var Portfolio = React.createClass({
 
 var Profile = React.createClass({
 
-  getInitialState: function() {
-    return { profile: null };
-  },
-
-  handleChange: function(e) {
-    this.setState({ profile: e.target.value });
-  },
-
-  componentWillReceiveProps: function(nextProps){
-    this.setState({ profile: nextProps.profile });
-
-    if (this.props.editView && !nextProps.editView) {
-      var data = {field: 'profile', username: nextProps.username, content: this.state.profile};
-      // AppActions.updateProfile(data);
-    }
-  },
-
   render: function(){
     var content;
     
     if (this.props.editView) {
-      content = <textarea rows='10' style={{width:"100%"}} value={this.state.profile} onChange={this.handleChange}/>
+      content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.profile} onChange={this.props.handleChange.bind(this, 'profile')}/>
     } else {
-      if (this.props.profile) {
-        content = <p style={{"white-space": "pre-wrap"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.profile)}}></p>;
-      }
+      content = <p style={{"white-space": "pre-wrap"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.profile)}}></p>;
     }
 
     return(
@@ -312,5 +293,5 @@ var Discussion = React.createClass({
 
 });
 
-module.exports = Expert;
+module.exports = Wrapper;
 

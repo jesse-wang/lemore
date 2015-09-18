@@ -1,10 +1,12 @@
 module.exports = {
-  user: {
+  emptyUser: {
     avatar: '',
     id: 0,
     username: "",
-    nickname: "TA",
-    headline: "关于TA",
+    nickname: null,
+    headline: null,
+    portfolio: "",
+    profile: ""
   },
 
   comment: {

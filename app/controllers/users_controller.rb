@@ -8,6 +8,20 @@ class UsersController < ApplicationController
     render 'shared/meta'
   end
 
+  def index
+    users = User.all
+
+    @title = "All Users"
+    @image = "/logo.png"
+    @description = "All Users"
+    @url = users_url
+
+    respond_to do |format|
+      format.html { render 'shared/meta'}
+      format.json { render json: users.as_json, status: :ok }
+    end
+  end
+
   def show
     user = User.find_by(username: params[:id])
 
@@ -39,10 +53,13 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+  end
+
   private
 
     def user_params
-      params.permit(:nickname, :headline, :portfolio, :profile)
+      params.permit(:avatar, :nickname, :headline, :portfolio, :profile)
     end
 
 end

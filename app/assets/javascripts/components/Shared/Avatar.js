@@ -82,7 +82,7 @@ var Avatar = React.createClass({
                 <br />
               </h5>
               <div>
-                <FollowButton session={this.props.session} openSignIn={this.props.openSignIn} username={user.username} following={user.following}/>
+                {/*<FollowButton session={this.props.session} openSignIn={this.props.openSignIn} username={user.username} following={user.following}/>*/}
               </div>
             </div>
           </Popover>
