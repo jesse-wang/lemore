@@ -18,7 +18,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html { render 'shared/meta'}
-      format.json { render json: users.as_json, status: :ok }
+      format.json { render json: users.as_json(include: :services), status: :ok }
     end
   end
 
@@ -32,7 +32,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html { render 'shared/meta'}
-      format.json { render json: user.as_json, status: :ok }
+      format.json { render json: user.as_json(include: :services), status: :ok }
     end
   end
   
@@ -47,7 +47,7 @@ class UsersController < ApplicationController
     # end
     
     if user.update!(user_params)
-      render json: user.as_json, status: :ok
+      render json: user.as_json(include: :services), status: :ok
     else 
       render json: user.errors.as_json(full_messages: true), status: 422
     end

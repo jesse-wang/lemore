@@ -97,7 +97,37 @@ var DataStore = _.extend({
       data: data
     }).then(
       function(response){
-        // SessionActions.receiveCurrentUserInfo(response);
+        AppActions.receiveUserInfo(response);
+      },
+      function(error){
+        // TODO: add errors here
+        HandleTokenExpired(error);
+      }
+    );
+  },
+
+  createService: function(data){
+    AppRequest({
+      type: 'POST',
+      url: rUrl('services'),
+      data: data
+    }).then(
+      function(response){
+        AppActions.receiveUserInfo(response);
+      },
+      function(error){
+        // TODO: add errors here
+        HandleTokenExpired(error);
+      }
+    );
+  },
+
+  deleteService: function(data){
+    AppRequest({
+      type: 'DELETE',
+      url: rUrl('services/'+data.id)
+    }).then(
+      function(response){
         AppActions.receiveUserInfo(response);
       },
       function(error){
@@ -151,6 +181,12 @@ AppDispatcher.register(function(action) {
       break;
     case ActionTypes.RECEIVE_USER_INFO:
       DataStore.receiveUserInfo(data);
+      break;
+    case ActionTypes.CREATE_SERVICE:
+      DataStore.createService(data);
+      break;
+    case ActionTypes.DELETE_SERVICE:
+      DataStore.deleteService(data);
       break;
     // OTHERS
     case ActionTypes.CONTACT:

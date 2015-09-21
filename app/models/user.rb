@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   validates_exclusion_of :username, in: %w( admin superuser me invitation), message: "not available."
   validates :username, uniqueness: { allow_blank: false, case_sensitive: false }, format: { with: /\A\w*\z/, message: "must contain letters (a-z) and numbers (0-9) only." }
 
+  has_many :services, dependent: :destroy
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -16,21 +18,6 @@ class User < ActiveRecord::Base
     else
       where(conditions).first
     end
-  end
-
-  def construct_info(current_user)
-    {
-      id: self.username,
-      data: {
-        id:              self.id,
-        username:        self.username,
-        email:           self.email,
-        avatar:          self.avatar,
-        first_name:      self.first_name,
-        last_name:       self.last_name,
-        headline:        self.headline,
-      }
-    }
   end
 
 end

@@ -5,6 +5,7 @@ module.exports = {
     username: "",
     nickname: null,
     headline: null,
+    services: [],
     portfolio: "",
     profile: ""
   },

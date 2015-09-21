@@ -1,6 +1,8 @@
 var React = require('react');
 var Link = require('react-router').Link;
 var InfiniteScroll = require('react-infinite-scroll')(React);
+var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
+var Popover = require('react-bootstrap').Popover;
 // Actions
 // var AppActions = require('../../actions/AppActions');
 // Constants
@@ -140,7 +142,9 @@ var Comments = React.createClass ({
                 <textarea onChange={this.handleChange} ref="commentText" value={this.state.commentText} className="form-control" id="comment-box" autoComplete="off" style={{"position": "relative", "outline": "0px", "background": "transparent"}}></textarea>
               </div>
             </div>
-            <button onClick={this.postComment} className="btn btn-primary" name="button" type="submit">Post</button> 
+            <OverlayTrigger trigger="click" rootClose placement="top" overlay={<Popover>抱歉，此功能还未开放</Popover>}>
+              <button onClick={this.postComment} className="btn btn-primary" name="button" type="submit">发布</button> 
+            </OverlayTrigger>
           </div>
           {/*<ul>
             <div id="comment-list">

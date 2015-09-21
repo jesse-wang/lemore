@@ -33,7 +33,6 @@ var AppActions = {
       data: data
     });
   },
-
   
   updateProfile: function(data){
     AppDispatcher.dispatch({
@@ -41,7 +40,21 @@ var AppActions = {
       data: data
     })
   },
+
+  createService: function(data){
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.CREATE_SERVICE,
+      data: data
+    })
+  },
   
+  deleteService: function(data){
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.DELETE_SERVICE,
+      data: data
+    })
+  },
+
   /****************************************************/
   //                   Others
   /****************************************************/

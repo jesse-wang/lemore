@@ -23,6 +23,8 @@ module.exports = {
     REQUEST_USER_INFO:              null,
     RECEIVE_USER_INFO:              null,
     UPDATE_PROFILE:                 null,
+    CREATE_SERVICE:                 null,
+    DELETE_SERVICE:                 null,
 
     // Others
     CONTACT:                        null,

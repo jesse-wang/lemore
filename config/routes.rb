@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   resources :users, only: [:index, :show, :update, :destroy], path: "u" do 
   end
 
+  resources :services, only: [:create, :update, :destroy]
+
   # for facebook & twitter login
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' },
                      skip: [:invitations, :session, :registration],

@@ -4,9 +4,13 @@ var InfiniteScroll = require('react-infinite-scroll')(React);
 var DropdownButton = require('react-bootstrap').DropdownButton;
 var MenuItem = require('react-bootstrap').MenuItem;
 var Input = require('react-bootstrap').Input;
+var Button = require('react-bootstrap').Button;
+var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
+var Popover = require('react-bootstrap').Popover;
 var Initializers = require('../../constants/Initializers');
 var ReactS3Uploader = require('../react-s3-uploader');
 var Uri = require('jsuri');
+var Cx = require('classnames');
 // Actions
 var AppActions = require('../../actions/AppActions');
 // Components
@@ -110,7 +114,6 @@ var Expert = React.createClass({
 
     var editBtn;
 
-    console.log(this.props.session)
     if (this.props.session.isLoggedIn && this.props.session.userInfo.username == user.username) {
       editBtn = <button className="btn btn-primary pull-right" style={{margin:"15px"}} onClick={this.toggleEditView}>{this.state.editView ? 'Done Edit' : 'Edit'}</button> 
     }
@@ -124,7 +127,7 @@ var Expert = React.createClass({
           <div ref='left' className='col-sm-8'>
             {editBtn}
             <ProfileHeader editView={this.state.editView} user={user} handleChange={this.handleChange} handleAvatarChange={this.handleAvatarChange}/>
-            <Services editView={this.state.editView} user={user} handleChange={this.handleChange}/>
+            <Services editView={this.state.editView} user={user} />
             <Portfolio editView={this.state.editView} user={user} handleChange={this.handleChange}/>
             <Profile editView={this.state.editView} user={user} handleChange={this.handleChange}/>
             <Discussion editView={this.state.editView} comments={comments} />
@@ -135,7 +138,9 @@ var Expert = React.createClass({
             <div>
               
               <div>
-                <button className='btn btn-block btn-success'>私信（2次）</button>
+                <OverlayTrigger trigger="click" rootClose placement="top" overlay={<Popover>抱歉，此功能还未开放</Popover>}>
+                  <button className='btn btn-block btn-success'>私信（2次）</button>
+                </OverlayTrigger>
                 {/*<button className='btn btn-block btn-success'>开始合作</button>*/}
               </div>
               
@@ -217,34 +222,133 @@ var ProfileHeader = React.createClass({
 
 var Services = React.createClass({
 
-  render: function(){
+  getInitialState: function() {
+    return {
+      newServiceName:  "",
+      newServicePrice: "",
+      newServiceDesc:  "",
+      selectedServices: []
+    };
+  },
 
+  nameHandler: function() {
+    this.setState ({
+      newServiceName: event.target.value
+    });
+  },
+
+  priceHandler: function() {
+    this.setState ({
+      newServicePrice: event.target.value
+    });
+  },
+
+  descHandler: function() {
+    this.setState ({
+      newServiceDesc: event.target.value
+    });
+  },
+
+  onConfirm: function(){
+    var data = {name: this.state.newServiceName, price: this.state.newServicePrice, description: this.state.newServiceDesc, user_id: this.props.user.id};
+    AppActions.createService(data);
+    this.onCancel();
+  },
+
+  onCancel: function(){
+    this.setState({
+      newServiceName:  "",
+      newServicePrice: "",
+      newServiceDesc:  ""
+    });
+  },
+
+  onDelete: function(service){
+    AppActions.deleteService({id: service.id});
+  },
+
+  onSelect: function(service){
+    var services = this.state.selectedServices;
+    services[service.id] = {price: service.price, num: event.target.value};
+    
+    this.setState({
+      selectedServices: services
+    });
+  },
+
+  render: function(){
+    var total = 0;
+
+    this.state.selectedServices.map(function(ss) {
+      total += ss.price * ss.num;
+    });
+
+    var purchaseBtnClass = Cx({
+      'btn btn-success pull-right': true,
+      'disabled': total == 0
+    });   
+
+    var content;
+    if (this.props.editView) {
+      var _this = this;
+      services = this.props.user.services.map(function(s) {
+        return  <div style={{background:"whitesmoke", padding:"10px", margin:"10px 0"}}>
+                  <span style={{lineHeight:"2.6"}}>{s.name}</span>
+                  <Button className='pull-right' style={{"outline":"none"}} bsStyle='link' onClick={_this.onDelete.bind(this, s)}><i className="fa fa-trash" style={{"fontSize":"24px", "color":"gray"}}></i></Button>
+                  <span className='pull-right' style={{lineHeight:"2.6", marginRight:"10px"}}>${s.price}</span>
+                </div>;
+      });
+
+      content = <div>
+                  {services}
+                  <div style={{overflow:"auto"}}>
+                    <input style={{"width":"65%", marginBottom:"10px"}} placeholder="New service's name" type="text" value={this.state.newServiceName} onChange={this.nameHandler}/>
+                    <input style={{"width":"30%", marginBottom:"10px", float:"right"}} placeholder="Price ($)" type="number" value={this.state.newServicePrice} onChange={this.priceHandler}/>
+                    <textarea rows='5' style={{width:"100%"}} placeholder="Description" type="text" value={this.state.newServiceDesc} onChange={this.descHandler}/>
+                    <Button style={{"outline":"none"}} bsStyle='link' onClick={this.onConfirm}><i className="fa fa-check" style={{"fontSize":"24px", "color":"green"}}></i></Button>
+                    <Button style={{"outline":"none"}} bsStyle='link' onClick={this.onCancel}><i className="fa fa-remove" style={{"fontSize":"24px", "color":"red"}}></i></Button>
+                  </div>
+                </div>;
+    } else {
+      var _this = this;
+      services = this.props.user.services.map(function(s) {
+        return  <div style={{background:"whitesmoke", padding:"10px", margin:"10px 0"}}>
+                  <span style={{lineHeight:"2.6"}}>{s.name}</span>
+                  
+                  <span className='pull-right'>
+                    <Input type='select' onChange={_this.onSelect.bind(this, s)}>
+                      <option value='0'>0</option>
+                      <option value='1'>1</option>
+                      <option value='2'>2</option>
+                      <option value='3'>3</option>
+                      <option value='4'>4</option>
+                      <option value='5'>5</option>
+                      <option value='6'>6</option>
+                      <option value='7'>7</option>
+                      <option value='8'>8</option>
+                      <option value='9'>9</option>
+                      <option value='10'>10</option>
+                    </Input>
+                  </span>
+
+                  <span className='pull-right' style={{lineHeight:"2.6", marginRight:"10px"}}>${s.price}</span>
+                </div>;
+      });
+
+      content = <div>
+                  {services}
+                  <div>
+                    <OverlayTrigger trigger="click" rootClose placement="top" overlay={<Popover>抱歉，此功能还未开放</Popover>}>
+                      <button className={purchaseBtnClass}>购买 (${total})</button>
+                    </OverlayTrigger>
+                  </div>
+                </div>;
+    }
+    
     return(
       <div style={{padding:"20px 15px"}}>
         <h3>高手技能</h3>
-        {/*<div style={{background:"whitesmoke", padding:"10px", margin:"10px 0"}}>
-          <span style={{lineHeight:"2.6"}}>产品策略撰写</span>
-          <span className='pull-right'>
-            <Input type='select'>
-              <option value='1'>1 ($50)</option>
-              <option value='2'>2 ($100)</option>
-              <option value='3'>3 ($150)</option>
-            </Input>
-          </span>
-        </div>
-        <div style={{background:"whitesmoke", padding:"10px", margin:"10px 0"}}>
-          <span style={{lineHeight:"2.6"}}>文案撰写</span>
-          <span className='pull-right'>
-            <Input type='select'>
-              <option value='1'>1 ($100)</option>
-              <option value='2'>2 ($200)</option>
-              <option value='3'>3 ($300)</option>
-            </Input>
-          </span>
-        </div>
-        <div>
-          <button className="btn btn-success pull-right">购买（$150)</button>
-        </div>*/}
+        {content}
       </div>
     );
   }
@@ -257,7 +361,7 @@ var Portfolio = React.createClass({
     var content;
     
     if (this.props.editView) {
-      content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.portfolio} onChange={this.props.handleChange.bind(this, 'portfolio')}/>
+      content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.portfolio} onChange={this.props.handleChange.bind(this, 'portfolio')}/>;
     } else {
       content = <p style={{"white-space": "pre-wrap", textOverflow:"ellipsis", overflow:"hidden"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.portfolio)}}></p>;
     }
@@ -280,7 +384,7 @@ var Profile = React.createClass({
     var content;
     
     if (this.props.editView) {
-      content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.profile} onChange={this.props.handleChange.bind(this, 'profile')}/>
+      content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.profile} onChange={this.props.handleChange.bind(this, 'profile')}/>;
     } else {
       content = <p style={{"white-space": "pre-wrap", textOverflow:"ellipsis", overflow:"hidden"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.profile)}}></p>;
     }
