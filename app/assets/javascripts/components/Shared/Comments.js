@@ -68,7 +68,7 @@ var Comments = React.createClass ({
                       username: this.props.session.userInfo.username,
                       nickname: this.props.session.userInfo.nickname,
                       avatar: this.props.session.userInfo.avatar,
-                      headline: this.props.session.userInfo.headline,
+                      position: this.props.session.userInfo.position,
                       specialty_avatar_url: this.props.session.userInfo.specialty_icon,
                       reputation_count: 0,
                       content: this.state.commentText
@@ -112,7 +112,7 @@ var Comments = React.createClass ({
                   <p style={{"marginBottom": "0", "textAlign": "left"}}><Link to="expert" params={{username: d.commenter_info.username}} className="user_name"><b>{d.commenter_info.nickname}</b></Link></p>
                 </div>
                 <div style={{"display": "inline"}}>
-                  <span className="meta">{d.commenter_info.headline}</span>
+                  <span className="meta">{d.commenter_info.position}</span>
                 </div>
               </div>
             </div>
