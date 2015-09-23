@@ -101,7 +101,7 @@ var Home = React.createClass({
               {firstUser}
               {secondUser}
               {thirdUser}
-              <div className="service-item" style={{width: "700px", height:"450px"}}>
+              <div className="service-item wide">
                 <img src="/thinking.jpg" alt="新品海外上市" width="100%" height="100%" />
                   <div style={{position:"absolute", top:"0", width:"670px", padding:"30px 60px"}}>
                     <h3 style={{color:"white", marginBottom:"0"}}>新品海外上市，
