@@ -25,6 +25,9 @@ module.exports = {
     UPDATE_PROFILE:                 null,
     CREATE_SERVICE:                 null,
     DELETE_SERVICE:                 null,
+    REQUEST_USER_COMMENTS:          null,
+    RECEIVE_USER_COMMENTS:          null,
+    POST_COMMENT:                   null,
 
     // Others
     CONTACT:                        null,

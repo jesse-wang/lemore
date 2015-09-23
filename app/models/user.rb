@@ -4,6 +4,9 @@ class User < ActiveRecord::Base
 
   has_many :services, dependent: :destroy
 
+  has_many :received_comments, class_name:  "UserComment", foreign_key: "receiver_id", dependent: :destroy
+  has_many :comments, class_name:  "UserComment", foreign_key: "commenter_id", dependent: :destroy
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

@@ -11,17 +11,13 @@ var Initializers = require('../../constants/Initializers');
 var ReactS3Uploader = require('../react-s3-uploader');
 var Uri = require('jsuri');
 var Cx = require('classnames');
+var Table = require('../../util/table');
 // Actions
 var AppActions = require('../../actions/AppActions');
 // Components
 // var Loader = require('../Shared/Loader');
 var Avatar = require('../Shared/Avatar').Avatar;
 var Comments = require('../Shared/Comments');
-
-// function replaceURLWithLinks(text){
-//     const delimiter = /((?:https?:\/\/)?(?:(?:[a-z0-9]?(?:[a-z0-9\-]{1,61}[a-z0-9])?\.[^\.|\s])+[a-z\.]*[a-z]+|(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(?::\d{1,5})*[a-z0-9.,_\/~#&=;%+?\-\\(\\)]*)/ig;
-//     return text.replace(delimiter, '<a href="http://$1">$1</a>'); 
-// }
 
 function replaceURLWithLinks(inputText) {
     var replacedText, replacePattern1, replacePattern2, replacePattern3;
@@ -58,14 +54,16 @@ var Wrapper = React.createClass({
   },
 
   getData: function(username) {
-    AppActions.requestUserInfo({username: username});  
+    AppActions.requestUserInfo({username: username});
+    AppActions.requestUserComments({username: username});
   },
 
   render: function() {
-    var user = this.props.dataStore.get("usersInfo").get(this.props.params.username);
+    var allUsers = this.props.dataStore.get("usersInfo");
+    var user = allUsers.get(this.props.params.username);
     if (!user) { user = Initializers.emptyUser; }
 
-    return <Expert user={user} session={this.props.session}/>;
+    return <Expert user={user} session={this.props.session} openSignIn={this.props.openSignIn} dataStore={this.props.dataStore}/>;
   }
 });
 
@@ -110,12 +108,16 @@ var Expert = React.createClass({
 
     var user = this.state.user;
 
-    var comments = [Initializers.comment];
+    var comments = this.props.dataStore.getIn(['usersComments', user.username]);
+    console.log(comments)
+    if (!comments) {
+      comments = [];
+    }
 
     var editBtn;
 
     if (this.props.session.isLoggedIn && this.props.session.userInfo.username == user.username) {
-      editBtn = <button className="btn btn-primary pull-right" style={{margin:"15px"}} onClick={this.toggleEditView}>{this.state.editView ? 'Done Edit' : 'Edit'}</button> 
+      editBtn = <button className="btn btn-primary" style={{position:"absolute", right:"15px", top:"15px"}} onClick={this.toggleEditView}>{this.state.editView ? 'Done Edit' : 'Edit'}</button> 
     }
 
     return (
@@ -130,7 +132,7 @@ var Expert = React.createClass({
             <Services editView={this.state.editView} user={user} />
             <Portfolio editView={this.state.editView} user={user} handleChange={this.handleChange}/>
             <Profile editView={this.state.editView} user={user} handleChange={this.handleChange}/>
-            <Discussion editView={this.state.editView} comments={comments} />
+            <Discussion receiver={user} comments={comments} session={this.props.session} openSignIn={this.props.openSignIn}/>
 
           </div>
 
@@ -186,7 +188,7 @@ var ProfileHeader = React.createClass({
   },
 
   render: function(){
-    var avatar, nickname, headline;
+    var avatar, nickname, position, headline;
     var user = this.props.user;
     
     if (this.props.editView) {
@@ -196,24 +198,29 @@ var ProfileHeader = React.createClass({
                     <ReactS3Uploader signingUrl="/s3_sign" accept="image/*" onFinish={this.onUploadFinish} />
                   </div>
                 </div>;
-      nickname = <input type="text" placeholder="昵称" value={user.nickname} onChange={this.props.handleChange.bind(this, 'nickname')} style={{display:"inline-block", marginRight:"20px", marginBottom:"10px"}}/>
-      headline = <input type="text" placeholder="一句话描述" value={user.headline} onChange={this.props.handleChange.bind(this, 'headline')} style={{display:"inline-block"}}/>
+      nickname = <input type="text" placeholder="昵称" value={user.nickname} onChange={this.props.handleChange.bind(this, 'nickname')} style={{display:"inline-block", marginRight:"20px", marginBottom:"10px"}}/>;
+      position = <input type="text" placeholder="职位" value={user.position} onChange={this.props.handleChange.bind(this, 'position')} style={{display:"inline-block"}}/>;
+      headline = <textarea row="2" type="text" placeholder="一句话描述" value={user.headline} onChange={this.props.handleChange.bind(this, 'headline')} style={{display:"block", width:"100%"}}/>;
     } else {
       avatar = <Avatar user={user} size="150"/>;
       nickname = <h1 style={{display:"inline-block", marginRight:"20px", marginTop:"0"}}>{user.nickname=='' ? 'TA' : user.nickname}</h1>;
+      position = <p style={{display:"inline-block"}}>{user.position=='' ? 'TA的职位' : user.position}</p>;  
       headline = <p style={{display:"inline-block"}}>{user.headline=='' ? '关于TA' : user.headline}</p>;  
     }
 
     return(
       <div>
-        <div style={{marginTop:"-30px", display:"inline-block"}}>
+        <div className="col-sm-4" style={{marginTop:"-30px", maxWidth:"170px"}}>
           {avatar}
         </div>
 
-        <div style={{display:"inline-block", marginLeft:"20px", verticalMargin:"top"}}>
+        <div className="col-sm-8" style={{marginTop:"30px"}}>
           {nickname}
+          {position}
           {headline}
         </div>
+
+        <div style={{clear:"both"}}></div>
       </div>
     );
   }
@@ -363,7 +370,7 @@ var Portfolio = React.createClass({
     if (this.props.editView) {
       content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.portfolio} onChange={this.props.handleChange.bind(this, 'portfolio')}/>;
     } else {
-      content = <p style={{"white-space": "pre-wrap", textOverflow:"ellipsis", overflow:"hidden"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.portfolio)}}></p>;
+      content = <p style={{whiteSpace: "pre-wrap", textOverflow:"ellipsis", overflow:"hidden"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.portfolio)}}></p>;
     }
 
     return(
@@ -386,7 +393,7 @@ var Profile = React.createClass({
     if (this.props.editView) {
       content = <textarea rows='10' style={{width:"100%"}} value={this.props.user.profile} onChange={this.props.handleChange.bind(this, 'profile')}/>;
     } else {
-      content = <p style={{"white-space": "pre-wrap", textOverflow:"ellipsis", overflow:"hidden"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.profile)}}></p>;
+      content = <p style={{whiteSpace: "pre-wrap", textOverflow:"ellipsis", overflow:"hidden"}} dangerouslySetInnerHTML={{__html: replaceURLWithLinks(this.props.user.profile)}}></p>;
     }
 
     return(
@@ -408,7 +415,7 @@ var Discussion = React.createClass({
     return(
       <div style={{padding:"20px 15px"}}>
         <h3>评论</h3>
-        <Comments comments={this.props.comments}/>
+        <Comments receiver={this.props.receiver} comments={this.props.comments} session={this.props.session} openSignIn={this.props.openSignIn}/>
       </div>
     );
   }

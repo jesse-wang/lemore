@@ -29,6 +29,7 @@ function HandleTokenExpired(error){
 var _DataStore = I.fromJS({
   // USERS
   usersInfo: {},
+  usersComments: {}
 });
 
 var DataStore = _.extend({
@@ -137,6 +138,44 @@ var DataStore = _.extend({
     );
   },
 
+  requestUserComments: function(data){
+    AppRequest({
+      type: 'get',
+      url: rUrl('u/' + data.username + '/received_comments')
+    }).then(
+      function(response){
+        AppActions.receiveUserComments(response);
+      },
+      function(error){
+        //error
+      }
+    );
+  },
+
+  receiveUserComments: function(data){
+    var results = Table.updateUserComments(_DataStore.get('usersComments'), data, _DataStore.get('usersInfo'));  
+    _DataStore = _DataStore.set('usersComments', results.table); 
+    console.log( _DataStore.set('usersComments'))
+    _DataStore = _DataStore.set('usersInfo', results.users_table); 
+
+    DataStore.emitChange();
+  },
+
+  postComment: function(data){
+    AppRequest({
+      type: 'post',
+      url: rUrl('user_comments'),
+      data: data
+    }).then(
+      function(response) {
+        AppActions.receiveUserComments(response);
+      },
+      function(error){
+        HandleTokenExpired(error);
+      }
+    );
+  },
+
   /*****************************************************/
   //                 Others
   /*****************************************************/
@@ -187,6 +226,15 @@ AppDispatcher.register(function(action) {
       break;
     case ActionTypes.DELETE_SERVICE:
       DataStore.deleteService(data);
+      break;
+    case ActionTypes.REQUEST_USER_COMMENTS:
+      DataStore.requestUserComments(data);
+      break;
+    case ActionTypes.RECEIVE_USER_COMMENTS:
+      DataStore.receiveUserComments(data);
+      break;
+    case ActionTypes.POST_COMMENT:
+      DataStore.postComment(data);
       break;
     // OTHERS
     case ActionTypes.CONTACT:

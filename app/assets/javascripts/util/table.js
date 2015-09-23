@@ -1,27 +1,27 @@
 var I = require('immutable');
 
-var updateHash = function(table, data){
-  var result = {
-    ids: [],
-    table: table
-  }
+// var updateHash = function(table, data){
+//   var result = {
+//     ids: [],
+//     table: table
+//   }
   
-  data.map(function(row){
-    result.ids.push(row.id);
-    // matching
-    if (!!table.get(row.id)) {
-      table = table.set(row.id, row.data);
-    } else {
-      var newRow = {};
-      newRow[row.id] = row.data;  
-      table = table.concat(newRow);
-    }
-  });
+//   data.map(function(row){
+//     result.ids.push(row.id);
+//     // matching
+//     if (!!table.get(row.id)) {
+//       table = table.set(row.id, row.data);
+//     } else {
+//       var newRow = {};
+//       newRow[row.id] = row.data;  
+//       table = table.concat(newRow);
+//     }
+//   });
 
-  result.table = table;
+//   result.table = table;
 
-  return result;
-};
+//   return result;
+// };
 
 var updateUser = function(table, data){
   var result = {
@@ -43,6 +43,34 @@ var updateUser = function(table, data){
 
   result.table = table;
 
+  return result;
+};
+
+var updateUserComments = function(table, comments, users_table){
+  var result = {
+    table: table,
+    users_table: users_table
+  }
+
+  comments.map(function(row){
+    results = updateUser(users_table, [row.receiver_info, row.commenter_info]);
+    users_table = results.table;
+  });
+
+  // matching
+  if (comments.length>0) {
+    if (table.get(comments[0].receiver_info.username)) {
+      table = table.set(comments[0].receiver_info.username, comments);
+    } else {
+      var newUserComments = {};
+      newUserComments[comments[0].receiver_info.username] = comments;  
+      table = table.concat(newUserComments);
+    }  
+  }
+  
+  result.table = table;
+  result.users_table = users_table;
+  
   return result;
 };
 
@@ -123,8 +151,8 @@ var keyIn = function(keys) {
 };
 
 module.exports = {
-  updateHash: updateHash,
   updateUser: updateUser,
+  updateUserComments: updateUserComments,
   updateCollection: updateCollection,
   updateProject: updateProject,
   updateIds: updateIds,

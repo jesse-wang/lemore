@@ -55,6 +55,27 @@ var AppActions = {
     })
   },
 
+  requestUserComments: function(data){    
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.REQUEST_USER_COMMENTS,
+      data: data
+    });
+  },
+
+  receiveUserComments: function(data){
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.RECEIVE_USER_COMMENTS,
+      data: data
+    });
+  },
+
+  postComment: function(data){    
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.POST_COMMENT,
+      data: data
+    });
+  },
+
   /****************************************************/
   //                   Others
   /****************************************************/

@@ -1,12 +1,12 @@
 class UsersController < ApplicationController
-  def expert_show
-    @title = "Expert"
-    @image = "/logo.png"
-    @description = "Expert is ..."
-    @url = root_url
+  # def expert_show
+  #   @title = "Expert"
+  #   @image = "/logo.png"
+  #   @description = "Expert is ..."
+  #   @url = root_url
 
-    render 'shared/meta'
-  end
+  #   render 'shared/meta'
+  # end
 
   def index
     users = User.all
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    user = User.find_by(username: params[:id])
+    user = User.find_by(username: params[:id]) || User.find_by(nickname: params[:id])
 
     @title = user.username
     @image = "/logo.png"
@@ -53,13 +53,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def received_comments
+    comments = User.find_by(username: params[:id]).received_comments
+    render json: comments.to_json(methods: [:receiver_info, :commenter_info]), status: :ok
+  end
+
   def destroy
   end
 
   private
 
     def user_params
-      params.permit(:avatar, :nickname, :headline, :portfolio, :profile)
+      params.permit(:avatar, :nickname, :position, :headline, :portfolio, :profile)
     end
 
 end

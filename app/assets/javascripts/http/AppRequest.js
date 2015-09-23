@@ -27,6 +27,8 @@ var AppRequest = function(options) {
   // }
 
   var request = $.ajax(_.defaults(options, params));
+
+  console.log(options)
   
   request
     .done(function(data) {
