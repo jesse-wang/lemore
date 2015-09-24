@@ -58,9 +58,9 @@ var Avatar = React.createClass({
 
     return (
       <div className="user-avatar">
-        <Link to="expert" params={{username: user.username}} ref='target' onMouseOver={this.mouseOverhandler} onMouseOut={this.mouseOuthandler}>
+        <Link to="expert" params={{username: user.username}} onMouseOver={this.mouseOverhandler} onMouseOut={this.mouseOuthandler}>
           {badge}
-          <img className="gravatar" width={this.props.size} height={this.props.size}  src={user.avatar} />
+          <div ref='target' className="gravatar" style={{width:this.props.size+"px", height:this.props.size+"px", backgroundImage:"url("+user.avatar+")", backgroundSize:"cover"}} ></div>
         </Link>
         <Overlay
           show={this.state.show}
@@ -71,7 +71,7 @@ var Avatar = React.createClass({
             <div style={{"textAlign":"center"}}>
               <Link to="expert" params={{username: user.username}}>
                 <div className="user-avatar">
-                  <img className="gravatar" height="50" src={user.avatar} />
+                  <div className="gravatar center" style={{width:"50px", height:"50px", backgroundImage:"url("+user.avatar+")", backgroundSize:"cover"}} ></div>
                 </div>
                 <h4 className="user-name">
                   {user.username}

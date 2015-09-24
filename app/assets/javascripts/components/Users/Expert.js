@@ -86,6 +86,13 @@ var Expert = React.createClass({
     this.setState({ user: user });
   },
 
+  handleBannerImageChange: function(image) {
+    var user = this.state.user;
+    user.banner_image = image;
+
+    this.setState({ user: user });
+  },
+
   handleAvatarChange: function(image) {
     var user = this.state.user;
     user.avatar = image;
@@ -104,8 +111,6 @@ var Expert = React.createClass({
   },
   
   render: function(){
-    var bgImage = 'linear-gradient(to bottom,rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url()';
-
     var user = this.state.user;
 
     var comments = this.props.dataStore.getIn(['usersComments', user.username]);
@@ -122,8 +127,7 @@ var Expert = React.createClass({
 
     return (
       <div>
-        <section ref='header' style={{backgroundImage:bgImage, overflow:"auto", height:"350px", position:"relative"}}>
-        </section>
+        <BannerImage editView={this.state.editView} user={user} handleBannerImageChange={this.handleBannerImageChange}/>  
 
         <section ref='body' className="user-body container">
           <div ref='left' className='col-sm-8'>
@@ -179,6 +183,35 @@ var Expert = React.createClass({
   }
 });
 
+var BannerImage = React.createClass({
+
+  onUploadFinish: function(signedResult){
+    var uri = new Uri(signedResult.signedUrl);
+    var image = "http://" + uri.host()+uri.path();
+    this.props.handleBannerImageChange(image);
+  },
+
+  render: function(){
+    var bannerImage = <section style={{background:"black", overflow:"auto", height:"350px", position:"relative"}}></section>;
+    var user = this.props.user;
+    
+    if (this.props.editView) {
+      bannerImage = <div style={{position:"relative"}}>
+                      <section style={{background:"black", backgroundImage:"url("+user.banner_image+")", backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "50% 50%", overflow:"auto", height:"350px", position:"relative"}}></section>
+                      <div style={{position:"absolute", left:"45%", top:"50%"}}>
+                        <ReactS3Uploader signingUrl="/s3_sign" accept="image/*" onFinish={this.onUploadFinish} />
+                      </div>
+                    </div>;
+    } else {
+      if (user.banner_image) {
+        bannerImage = <section style={{backgroundImage:"url("+user.banner_image+")", backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "50% 50%", overflow:"auto", height:"350px", position:"relative", }}></section>;
+      }
+    }
+
+    return bannerImage;
+  }
+});
+
 var ProfileHeader = React.createClass({
 
   onUploadFinish: function(signedResult){
@@ -193,7 +226,7 @@ var ProfileHeader = React.createClass({
     
     if (this.props.editView) {
       avatar =  <div>
-                  <img ref="userAvatar" className="gravatar" style={{width: '150px', height: '150px'}} src={user.avatar} />
+                  <div className="gravatar" style={{width: '150px', height: '150px', backgroundImage:"url("+user.avatar+")", backgroundSize:"cover"}} ></div>
                   <div style={{position:"absolute"}}>
                     <ReactS3Uploader signingUrl="/s3_sign" accept="image/*" onFinish={this.onUploadFinish} />
                   </div>
@@ -224,7 +257,6 @@ var ProfileHeader = React.createClass({
       </div>
     );
   }
-
 });
 
 var Services = React.createClass({
