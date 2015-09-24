@@ -36,7 +36,7 @@ var TopBar = React.createClass({
     } else {
       signOutBtn = <NavItem onClick={this.signOut}><span style={{color:"#76cdd4"}}>登出</span></NavItem>;
       avatarBtn = <NavItem onClick={this.goToMe}>
-                    <img className="gravatar" width="20" height="20" src={user.avatar}/>
+                    <div className="gravatar" style={{width:"20px", height:"20px", backgroundImage:"url("+user.avatar+")", backgroundSize:"cover"}} ></div>
                   </NavItem>;
     }
 
