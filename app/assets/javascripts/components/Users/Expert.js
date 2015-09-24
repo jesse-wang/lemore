@@ -12,6 +12,7 @@ var ReactS3Uploader = require('../react-s3-uploader');
 var Uri = require('jsuri');
 var Cx = require('classnames');
 var Table = require('../../util/table');
+var StarRating = require('react-star-rating');
 // Actions
 var AppActions = require('../../actions/AppActions');
 // Components
@@ -112,9 +113,11 @@ var Expert = React.createClass({
   
   render: function(){
     var user = this.state.user;
+    var average = "0";
+    if (user.averageRating) { average = user.averageRating; }
+    console.log(user.averageRating)
 
     var comments = this.props.dataStore.getIn(['usersComments', user.username]);
-    console.log(comments)
     if (!comments) {
       comments = [];
     }
@@ -151,15 +154,8 @@ var Expert = React.createClass({
               </div>
               
               <div style={{margin:"20px 5px"}}>
-                {/*3281个用户给TA打分
-                <span className="pull-right">
-                  <i className="fa fa-star" style={{color:"yellow"}}></i>
-                  <i className="fa fa-star" style={{color:"yellow"}}></i>
-                  <i className="fa fa-star" style={{color:"yellow"}}></i>
-                  <i className="fa fa-star" style={{color:"yellow"}}></i>
-                  <i className="fa fa-star" style={{color:"yellow"}}></i>
-                  <span style={{marginLeft:"5px"}}>5</span>
-                </span>*/}
+                {user.raterCount}个用户给TA打分
+                <div style={{float:"right"}}><StarRating size="sm" rating={average} editing={false}/></div>
               </div>
 
               <div>

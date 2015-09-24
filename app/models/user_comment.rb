@@ -4,16 +4,15 @@ class UserComment < ActiveRecord::Base
 
   validates :receiver_id, presence: true
   validates :commenter_id, presence: true
-  validates :content, presence: true
 
   default_scope -> { order('created_at DESC') }
 
   def receiver_info
-    receiver.as_json(include: :services)
+    receiver.as_json(include: :services, methods: [:raterCount, :averageRating])
   end
 
   def commenter_info
-    commenter.as_json(include: :services)
+    commenter.as_json(include: :services, methods: [:raterCount, :averageRating])
   end
 
 end

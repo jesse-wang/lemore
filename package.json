@@ -44,7 +44,8 @@
     "react-progressbar": "^1.1.0",
     "webpack": "^1.7.3",
     "webpack-dev-server": "^1.8.0",
-    "react-cookie": "^0.3.4"
+    "react-cookie": "^0.3.4",
+    "react-star-rating": "^1.3.2"
   },
   "devDependencies": {},
   "scripts": {

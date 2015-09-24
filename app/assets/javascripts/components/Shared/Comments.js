@@ -3,6 +3,8 @@ var Link = require('react-router').Link;
 var InfiniteScroll = require('react-infinite-scroll')(React);
 var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 var Popover = require('react-bootstrap').Popover;
+var StarRating = require('react-star-rating');
+
 // Actions
 var AppActions = require('../../actions/AppActions');
 // Constants
@@ -23,6 +25,7 @@ var Comments = React.createClass ({
   getInitialState: function(){
     return {
       commentText: '',
+      commentRating: 0,
       comments: this.props.comments,
       hasMore: false
     };
@@ -40,6 +43,13 @@ var Comments = React.createClass ({
   handleChange: function(e){
     this.setState({
       commentText: e.target.value
+    });
+  },
+
+  handleRatingClick: function(e, data){
+    console.log(data)
+    this.setState({
+      commentRating: data.rating
     });
   },
 
@@ -65,13 +75,14 @@ var Comments = React.createClass ({
     if(this.props.session.isLoggedIn){
       // Begin Optimistic Update
       var comment = {
-                      username: this.props.session.userInfo.username,
-                      nickname: this.props.session.userInfo.nickname,
-                      avatar: this.props.session.userInfo.avatar,
-                      position: this.props.session.userInfo.position,
-                      specialty_avatar_url: this.props.session.userInfo.specialty_icon,
-                      reputation_count: 0,
-                      content: this.state.commentText
+                      commenter_info: {
+                        username: this.props.session.userInfo.username,
+                        nickname: this.props.session.userInfo.nickname,
+                        avatar: this.props.session.userInfo.avatar,
+                        position: this.props.session.userInfo.position
+                      },
+                      content: this.state.commentText,
+                      rating:  this.state.commentRating
                     }
       var comments = this.state.comments;
       var newComments = [comment].concat(comments);
@@ -79,7 +90,7 @@ var Comments = React.createClass ({
       // End Optimistic Update
       
       // Begin Actual Post
-      var data = { receiver_id: this.props.receiver.id, content: this.state.commentText};
+      var data = { receiver_id: this.props.receiver.id, content: this.state.commentText, rating: this.state.commentRating};
       AppActions.postComment(data);
       this.setState({
         commentText: ''
@@ -107,7 +118,8 @@ var Comments = React.createClass ({
                   <img alt={d.commenter_info.username} className="gravatar" height="40" src={d.commenter_info.avatar} style={{"marginRight": "0"}} width="40"/>
                 </Link>
               </div>
-              <div style={{"display": "inline-block", "verticalAlign": "middle", "marginLeft": "8px"}}>
+
+              <div style={{"display": "inline-block", "verticalAlign": "top", "marginLeft": "8px"}}>
                 <div style={{"display": "inline"}}>
                   <p style={{"marginBottom": "0", "textAlign": "left"}}><Link to="expert" params={{username: d.commenter_info.username}} className="user_name"><b>{d.commenter_info.nickname}</b></Link></p>
                 </div>
@@ -115,6 +127,9 @@ var Comments = React.createClass ({
                   <span className="meta">{d.commenter_info.position}</span>
                 </div>
               </div>
+
+              <div style={{float:"right"}}><StarRating size="sm" rating={d.rating}/></div>
+
             </div>
             <div className="review-text" style={{padding:"10px 0 10px 10px", "display":"table"}}>
               {/*<div className="upvote" onClick={_this.upvoteComment.bind(_this, d, i)}  style={{"display":"table-cell", "float":"none"}}>
@@ -137,12 +152,15 @@ var Comments = React.createClass ({
     return (
       <div className="list rating-widget">
         <div style={{"marginTop":"15px"}}>
-          <div style={{"background": "transparent", "padding": "0 0", "marginBottom": "10px"}}>
-            <div className="form-group" style={{"marginBottom": "10px"}}>
+          <div style={{"background": "transparent", "padding": "0 0", "marginBottom": "30px"}}>
+            <div className="form-group" style={{"marginBottom": "0"}}>
               <div className="textoverlay-wrapper" style={{"margin": "0px", "padding": "0px", "overflow": "hidden", "display": "block", "position": "relative"}}>
                 <textarea onChange={this.handleChange} ref="commentText" value={this.state.commentText} className="form-control" id="comment-box" autoComplete="off" style={{"position": "relative", "outline": "0px", "background": "transparent"}}></textarea>
               </div>
             </div>
+
+            <div><StarRating name="star-rating" size="md" ratingAmount={5} onRatingClick={this.handleRatingClick}/></div>
+
             <button onClick={this.postComment} className="btn btn-primary" name="button" type="submit">发布</button> 
           </div>
           <ul>

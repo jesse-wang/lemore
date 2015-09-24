@@ -20,7 +20,7 @@ class ServicesController < ApplicationController
     end
 
     if service.save
-      render json: current_user.as_json(include: :services), status: :ok
+      render json: current_user.as_json(include: :services, methods: [:raterCount, :averageRating]), status: :ok
     else
       render json: service.errors.as_json(full_messages: true), status: 422
     end 
@@ -51,7 +51,7 @@ class ServicesController < ApplicationController
     # end
     
     if user.update!(user_params)
-      render json: user.as_json, status: :ok
+      render json: user.as_json(include: :services, methods: [:raterCount, :averageRating]), status: :ok
     else 
       render json: user.errors.as_json(full_messages: true), status: 422
     end
@@ -62,7 +62,7 @@ class ServicesController < ApplicationController
     user = service.user
     
     if service.destroy
-      render json: current_user.as_json(include: :services), status: :ok
+      render json: current_user.as_json(include: :services, methods: [:raterCount, :averageRating]), status: :ok
     else
       render json: service.errors.as_json(full_messages: true), status: 422
     end 

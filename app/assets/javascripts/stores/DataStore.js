@@ -155,7 +155,6 @@ var DataStore = _.extend({
   receiveUserComments: function(data){
     var results = Table.updateUserComments(_DataStore.get('usersComments'), data, _DataStore.get('usersInfo'));  
     _DataStore = _DataStore.set('usersComments', results.table); 
-    console.log( _DataStore.set('usersComments'))
     _DataStore = _DataStore.set('usersInfo', results.users_table); 
 
     DataStore.emitChange();

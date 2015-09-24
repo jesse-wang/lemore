@@ -14,7 +14,7 @@ class UserCommentsController < ApplicationController
    private
 
     def comment_params
-      params.permit(:receiver_id, :content)
+      params.permit(:receiver_id, :content, :rating)
     end
 
 end

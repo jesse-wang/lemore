@@ -23,4 +23,13 @@ class User < ActiveRecord::Base
     end
   end
 
+  def raterCount
+    received_comments.where('rating > 0').count
+  end
+
+  def averageRating
+    count = received_comments.where('rating > 0').count
+    total = received_comments.sum(:rating)
+    total / count
+  end
 end

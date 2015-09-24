@@ -15,7 +15,7 @@ module Auth
         # retrun a jwt
         @jwt = JWT.encode({uid: @user.id, exp: 10.years.from_now.to_i}, Rails.application.secrets.secret_key_base)
 
-        render json: {access_token: @jwt, user_info: @user.as_json}, status: 200
+        render json: {access_token: @jwt, user_info: @user.as_json(include: :services, methods: [:raterCount, :averageRating])}, status: 200
         # render json: @user, serializer: SessionSerializer, root: nil
       else
         invalid_login_attempt
@@ -36,7 +36,7 @@ module Auth
 
       @jwt = JWT.encode({uid: @user.id, exp: 10.years.from_now.to_i}, Rails.application.secrets.secret_key_base)
 
-      render json: {access_token: @jwt, user_info: @user.as_json}, status: 200   
+      render json: {access_token: @jwt, user_info: @user.as_json(include: :services, methods: [:raterCount, :averageRating])}, status: 200   
     end 
 
     def password_recovery
