@@ -92,8 +92,11 @@ var Footer = React.createClass({
         </div>
 
         <div style={{background:"#2f2d2e", padding:"20px 10px"}}>
-          <h4 style={{color:"white", margin:"13px 0", display:"inline-block"}}>LEMORE LAB</h4>
-          <p style={{color:"white"}}>440. N. Wolfe Rd, #E094, Sunnyvale, CA, 94085<br/>© All rights reserved 2015 by LeMore LLC.</p>
+          <img src="/qr.jpg" width="100" style={{float:"left", margin:"0 30px 0 15px"}}/>
+          <div style={{display:"inline-block"}}>
+            <h4 style={{color:"white", margin:"13px 0", display:"inline-block"}}>LEMORE LAB</h4>
+            <p style={{color:"white"}}>440. N. Wolfe Rd, #E094, Sunnyvale, CA, 94085<br/>© All rights reserved 2015 by LeMore LLC.</p>
+          </div>
         </div>
       </section>
     );
