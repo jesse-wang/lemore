@@ -21,56 +21,58 @@ var Footer = React.createClass({
     return (
       <section>
         <div style={{background:"#586166", padding:"40px 10px 10px 10px"}}>
-          <div className="col-md-2 col-sm-3 col-xs-6">
-            <p style={{color:"white"}}>Company</p>
-            <p style={{color:"#aaabad"}}>
-              Our Team
-              <br/>
-              Careers
-              <br/>
-              Blog
-              <br/>
-              Contact Us
-            </p>
-          </div>
+          <div className="col-md-offset-1 col-md-6">
+            <div className="col-sm-3 col-xs-6">
+              <p style={{color:"white"}}>Company</p>
+              <p style={{color:"#aaabad"}}>
+                Our Team
+                <br/>
+                Careers
+                <br/>
+                Blog
+                <br/>
+                Contact Us
+              </p>
+            </div>
 
-          <div className="col-md-2 col-sm-3 col-xs-6">
-            <p style={{color:"white"}}>Support</p>
-            <p style={{color:"#aaabad"}}>
-              Customer Service
-              <br/>
-              Authenticity Check
-              <br/>
-              Downloads
-              <br/>
-              FAQ
-            </p>
-          </div>
+            <div className="col-sm-3 col-xs-6">
+              <p style={{color:"white"}}>Support</p>
+              <p style={{color:"#aaabad"}}>
+                Customer Service
+                <br/>
+                Authenticity Check
+                <br/>
+                Downloads
+                <br/>
+                FAQ
+              </p>
+            </div>
 
-          <div className="col-md-2 col-sm-3 col-xs-6">
-            <p style={{color:"white"}}>Relations</p>
-            <p style={{color:"#aaabad"}}>
-              Partnerships
-              <br/>
-              Reviews
-              <br/>
-              Press
-              <br/>
-              News
-            </p>
-          </div>
+            <div className="col-sm-3 col-xs-6">
+              <p style={{color:"white"}}>Relations</p>
+              <p style={{color:"#aaabad"}}>
+                Partnerships
+                <br/>
+                Reviews
+                <br/>
+                Press
+                <br/>
+                News
+              </p>
+            </div>
 
-          <div className="col-md-2 col-sm-3 col-xs-6" style={{marginBottom:"20px"}}>
-            <p style={{color:"white"}}>Follow</p>
-            <p style={{color:"#aaabad"}}>
-              Facebook
-              <br/>
-              Twitter
-              <br/>
-              Instagram
-              <br/>
-              Linkedin
-            </p>
+            <div className="col-sm-3 col-xs-6" style={{marginBottom:"20px"}}>
+              <p style={{color:"white"}}>Follow</p>
+              <p style={{color:"#aaabad"}}>
+                Facebook
+                <br/>
+                Twitter
+                <br/>
+                Instagram
+                <br/>
+                Linkedin
+              </p>
+            </div>
           </div>
 
           <div className="col-md-4">
@@ -92,10 +94,13 @@ var Footer = React.createClass({
         </div>
 
         <div style={{background:"#2f2d2e", padding:"20px 10px"}}>
-          <img src="/qr.jpg" width="100" style={{float:"left", margin:"0 30px 0 15px"}}/>
-          <div style={{display:"inline-block"}}>
-            <h4 style={{color:"white", margin:"13px 0", display:"inline-block"}}>LEMORE LAB</h4>
-            <p style={{color:"white"}}>440. N. Wolfe Rd, #E094, Sunnyvale, CA, 94085<br/>© All rights reserved 2015 by LeMore LLC.</p>
+          <div className="col-md-offset-1">
+            <img src="/qr.jpg" width="70" style={{float:"left", margin:"0 30px 0 15px"}}/>
+            <div style={{display:"inline-block"}}>
+              <img src="/lemore.png" width="25" style={{display:"inline-block", marginRight:"10px"}}/>
+              <p style={{color:"white", display:"inline-block", fontSize:"12px"}}>LEMORE LAB</p>
+              <p style={{color:"white", fontSize:"12px"}}>440. N. Wolfe Rd, #E094, Sunnyvale, CA, 94085<br/>© All rights reserved 2015 by LeMore LLC.</p>
+            </div>
           </div>
         </div>
       </section>
