@@ -138,6 +138,7 @@ var Home = React.createClass({
               {sixthUser}
               {seventhUser}
             </div>
+            <div style={{clear:"both"}}></div>
           </div>
 
           <button className="btn center" onClick={this.props.openSignUp} style={{marginTop:"10px", display:"block", borderRadius:"0", background:"#76cdd4", padding:"5px 30px", color:"white"}}>更多高高手</button>
