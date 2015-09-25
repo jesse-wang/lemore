@@ -43,12 +43,15 @@ var Home = React.createClass({
       return <ServiceItem item={i} />;
     });
 
-    var firstUser, secondUser, thirdUser, fourthUser;
+    var firstUser, secondUser, thirdUser, fourthUser, fifthUser, sixthUser, seventhUser;
     if (users.length>4) {
       firstUser = <ServiceItem item={users.get('test1')} />;
       secondUser = <ServiceItem item={users.get('test2')} />;
       thirdUser = <ServiceItem item={users.get('test3')} />;
       fourthUser = <ServiceItem item={users.get('test4')} />;
+      fifthUser = <ServiceItem item={users.get('test5')} />;
+      sixthUser = <ServiceItem item={users.get('test6')} />;
+      seventhUser = <ServiceItem item={users.get('test7')} />;
     }
     
 
@@ -123,9 +126,22 @@ var Home = React.createClass({
                 {items}
               </InfiniteScroll>
             </div>*/}
-
-            <button className="btn center" onClick={this.props.openSignUp} style={{marginTop:"10px", display:"block", borderRadius:"0", background:"#76cdd4", padding:"5px 30px", color:"white"}}>更多高高手</button>
           </div>
+
+          <div style={{position:"relative"}}>
+            <div className="arrow-right"></div>
+            <div style={{margin:"20px 0 10px -40px", padding:"5px 20px 5px 50px", background:"#76cdd4", display:"inline-block", position:"relative"}}>
+              <h3 style={{color:"white", margin:"0"}}>实现服务</h3>
+            </div>
+            <div>
+              {fifthUser}
+              {sixthUser}
+              {seventhUser}
+            </div>
+          </div>
+
+          <button className="btn center" onClick={this.props.openSignUp} style={{marginTop:"10px", display:"block", borderRadius:"0", background:"#76cdd4", padding:"5px 30px", color:"white"}}>更多高高手</button>
+
         </section>
 
         <section className="service-container" style={{background:"transparent", padding:"20px 10px"}}>
