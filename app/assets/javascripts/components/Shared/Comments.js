@@ -115,7 +115,7 @@ var Comments = React.createClass ({
             <div className="reviewer-info">
               <div style={{"display":"inline-block","position":"relative"}}>
                 <Link to="expert" params={{username: d.commenter_info.username}} className="user_name">
-                  <img alt={d.commenter_info.username} className="gravatar" height="40" src={d.commenter_info.avatar} style={{"marginRight": "0"}} width="40"/>
+                  <div className="gravatar" style={{marginRight:"0", width:"40px", height:"40px", backgroundImage:"url("+d.commenter_info.avatar+")", backgroundSize:"cover"}} ></div>
                 </Link>
               </div>
 
